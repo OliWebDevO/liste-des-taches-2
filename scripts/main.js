@@ -56,7 +56,25 @@ function dataStorage() {
     localStorage.setItem(`taskDate${i}`, `${date.value}`)
     localStorage.setItem(`taskDescription${i}`, `${description.value}`)
 }
-
+function showData(i, nom , date, description) {
+    taskList.innerHTML += `
+    <div class="tachemove" draggable="true">
+        <div class="tache">
+            <input type="checkbox" id="check" class="checkbox"/>
+            <h4>Tâche ${i} : </h4>
+            <p>${nom}</p>
+            <p><strong>Date limite :</strong> ${date}</p>
+            <div class="cancel">❌</div>
+        </div>
+        <div class="descript">
+            <details>
+                <summary><strong>Description</strong></summary>
+                <p class="descrip">${description}</p>
+            </details>
+        </div>
+    </div>`
+    
+}
 
 // ******** APPEL DE FONCTIONS ET EVENEMENTS ********
 
@@ -69,7 +87,8 @@ add.addEventListener('click', ()=> {
     tachePush.nom = nom.value
     tachePush.date = date.value
     tachePush.description = description.value
-    tachePush.show()
+    // tachePush.show()
+    showData(i, localStorage.getItem(`taskName${i}`), localStorage.getItem(`taskDate${i}`),localStorage.getItem(`taskDescription${i}`))
     tableau.push(tachePush)
     console.log(tableau);
     console.log(localStorage.getItem(`index${i}`))
@@ -111,10 +130,31 @@ taskDone.addEventListener('click', (event)=> {
 
 
 trier.addEventListener('click', ()=> {
-    let tri = tableau.sort(function(a,b){
-        return a.date - b.date
+    tableau.sort(function(a,b){
+        return new Date(a.date) - new Date(b.date)
     })
-    console.log(tri)
+    console.log(tableau)
+    taskList.innerHTML = ""
+    for (let index = 0; index < tableau.length; index++) {
+        const element = tableau[index];
+        taskList.innerHTML += `
+            <div class="tachemove" draggable="true">
+                <div class="tache">
+                    <input type="checkbox" id="check" class="checkbox"/>
+                    <h4>Tâche ${index+1} : </h4>
+                    <p>${element.nom}</p>
+                    <p><strong>Date limite :</strong> ${element.date}</p>
+                    <div class="cancel">❌</div>
+                </div>
+                <div class="descript">
+                    <details>
+                        <summary><strong>Description</strong></summary>
+                        <p class="descrip">${element.description}</p>
+                    </details>
+                </div>
+            </div>`
+    }
+    
 })
 
 
